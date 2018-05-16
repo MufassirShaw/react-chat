@@ -8,7 +8,7 @@ var io = require("socket.io")(server); // passing the server to the instance of 
 app.get('/', function(req, res){  // telling the server to render the following folder on localhost:PORT/
   // res.sendFile( path.join(`${__dirname}/../../public/index.html`));
   // document.write("working app");
-  console.log("working app");
+  // console.log("working app");
 });
 
 io.on("connection",function(socket){
