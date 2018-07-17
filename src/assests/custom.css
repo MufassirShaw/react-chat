@@ -3,60 +3,19 @@
     secondary : #3f51b5
 
 */
-
-.appContainer{
-    width: 100%;
-    background: url("./imgs/bg.jpg") center center no-repeat;
-    background-size: cover;
-    min-height:100vh;
-    overflow: hidden; 
+*{
+    padding: 0px;
+    margin: 0px;
 }
-.loginForm{
-    position: absolute;
-    top: 30%;
-    left: 50%;
+.App{
+    background: url('./imgs/bg.png') repeat;
+    height: 100vh;
+}
+.form{
     width: 50%;
-    margin-left: -25%; 
+    margin: 20% auto;
+    padding: 20px 10px;
 }
-
-
-.chatHeading{
-    background-color: #512da8;
-    color: #fff;
- }
-.chatContainer{
-    width: 99%;
-    margin: 0 auto;
+.btn{
+    background-color: #512da8;   
 }
-.snd-btn {
-    background-image: url("./imgs/btn.png");
-    background-size:contain; 
-    background-repeat:  no-repeat;
-    background-position-x : center;
-
-}
-.app-btn{
-    background-color: #512da8;
-    
-}
-.app-btn:hover, .app-btn:active{
-    background-color: #3f51b5;
-}
-.msg{
-    display:inline-block;
-    min-width: 20px;
-    background-color:#512da8;
-    color: #fff; 
-    padding: 5px 10px;
-    margin-left: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-}
-.user{
-    background-color: #3f51b5;
-    display: inline-block;
-    color: #fff;
-    padding:2px 5px;
-    border-radius: 5px;
-}
-  
