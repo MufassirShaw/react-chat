@@ -23,10 +23,9 @@ export class Form extends Component{
         
          };
     }
-
     handleSubmit = (e)=>{
         console.log(e);
-        e.preventDefualt()
+        e.preventDefualt();
     }
 
     
@@ -41,7 +40,7 @@ export class Form extends Component{
                     <Slide in={this.state.slideState} direction="down" mountOnEnter unmountOnExit>
                         
                         <Paper className="form" elevation={10}>
-                            <LoginForm/>
+                            <LoginForm handleSubmit={this.handleSubmit} />
                         </Paper>
                     </Slide>
                 </Modal>
@@ -51,18 +50,76 @@ export class Form extends Component{
  
  }
 
+const SignupForm =(props)=>{
+    return (
+        <Fragment> 
+            <Grid container component='form' onSubmit={props.handleSubmit} justify="center" spacing={16} >
+                <Grid item xs={3}> </Grid>
+                <Grid item className='' xs={6} >
+                    <Typography 
+                        variant="display2"
+                        align="center" 
+                        color="primary"
+                        gutterBottom
+                        >Sign Up Here</Typography>
+                    <Avatar
+                        className="avatar"  
+                        gutterBottom
+                        component="img"
+                        alt="avatar"
+                     />
+
+                </Grid>
+                <Grid item xs={3}> </Grid>
+                <Grid item xs={12}>
+                    <TextField 
+                        fullWidth
+                        required
+                        placeholder="User name.."
+                        label="Name"
+                        id="name"
+                    /> 
+                </Grid>
+                <Grid xs={12} item >
+                    <TextField 
+                        fullWidth
+                        required
+                        placeholder="Password.."
+                        label="Password"
+                        id="name"
+                    /> 
+                </Grid>
+                <Grid item xs={12} >
+                    <Button  className="btn" gutterBottom type="submit" variant="contained" color="primary">
+                        Submit 
+                    </Button> 
+                </Grid>
+                
+            </Grid>                    
+        </Fragment>
+    );
+
+}
+
 
 const LoginForm = (props)=>{
-
     return (
         <Fragment> 
                 <div className="loginForm">
                     <Grid container component='form' onSubmit={props.handleSubmit} justify="center" spacing={16} >
                         <Grid item xs={3}> </Grid>
-                        <Grid item xs={6}>
-                            <Avatar
-                                alt="Avater"
+                        <Grid item component='div' className='avatarContainer' xs={6} >
+                            <Typography 
+                                variant="display2"
+                                align="center" 
+                                color="primary"
+                                gutterBottom
+                                >Login Here</Typography>
+                            <img
+                                className="avatar"  
+                                gutterBottom
                             />
+
                         </Grid>
                         <Grid item xs={3}> </Grid>
                         <Grid item xs={12}>
@@ -85,7 +142,7 @@ const LoginForm = (props)=>{
                         </Grid>
                         <Grid item xs={12} >
                             <Button  className="btn" type="submit" variant="contained" color="primary">
-                                Submit
+                                Submit 
                             </Button> 
                         </Grid>
                         
