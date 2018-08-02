@@ -7,106 +7,59 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Paper from "@material-ui/core/Paper";
 import Avatar from '@material-ui/core/Avatar';
+import {signIn, signUp} from "../../Actions";
 //the only component exported from this module
 export class Form extends Component{
     constructor(){
         super();
- 
         this.state = {
-             user: {
-             name: null,
-             password:null,
-             nickName: null
-             },
-             modalState: true,
-             slideState: true
-        
-         };
+            isReg: false
+        }
     }
-    handleSubmit = (e)=>{
-        console.log(e);
-        e.preventDefualt();
-    }
-
-    
     render(){
         return(
             <Fragment>
                 <Modal 
-                open={this.state.modalState}
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
+                    open= {true}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
                 >                     
-                    <Slide in={this.state.slideState} direction="down" mountOnEnter unmountOnExit>
+                    <Slide in direction="down" mountOnEnter unmountOnExit>
                         
                         <Paper className="form" elevation={10}>
-                            <LoginForm handleSubmit={this.handleSubmit} />
+                        {   
+                            this.state.isReg 
+                            ? 
+                            <LoginForm  />
+                            :
+                            <SignUpForm />
+                        }    
+                            <Typography 
+                                variant="subheading"
+                                className="link" 
+                                color="primary" 
+                                onClick= {()=>{this.setState({isReg: !this.state.isReg})}}
+                                href="#" 
+                                component="a" 
+                                gutterBottom>
+                                Or {this.state.isReg?" Signup" : " Sign In"} 
+                            </Typography>           
                         </Paper>
                     </Slide>
                 </Modal>
-             </Fragment>
+            </Fragment>
         );
     }
- 
- }
-
-const SignupForm =(props)=>{
-    return (
-        <Fragment> 
-            <Grid container component='form' onSubmit={props.handleSubmit} justify="center" spacing={16} >
-                <Grid item xs={3}> </Grid>
-                <Grid item className='' xs={6} >
-                    <Typography 
-                        variant="display2"
-                        align="center" 
-                        color="primary"
-                        gutterBottom
-                        >Sign Up Here</Typography>
-                    <Avatar
-                        className="avatar"  
-                        gutterBottom
-                        component="img"
-                        alt="avatar"
-                     />
-
-                </Grid>
-                <Grid item xs={3}> </Grid>
-                <Grid item xs={12}>
-                    <TextField 
-                        fullWidth
-                        required
-                        placeholder="User name.."
-                        label="Name"
-                        id="name"
-                    /> 
-                </Grid>
-                <Grid xs={12} item >
-                    <TextField 
-                        fullWidth
-                        required
-                        placeholder="Password.."
-                        label="Password"
-                        id="name"
-                    /> 
-                </Grid>
-                <Grid item xs={12} >
-                    <Button  className="btn" gutterBottom type="submit" variant="contained" color="primary">
-                        Submit 
-                    </Button> 
-                </Grid>
-                
-            </Grid>                    
-        </Fragment>
-    );
-
 }
-
-
-const LoginForm = (props)=>{
+ 
+ const SignUpForm = (props)=>{
     return (
         <Fragment> 
-                <div className="loginForm">
-                    <Grid container component='form' onSubmit={props.handleSubmit} justify="center" spacing={16} >
+                <div>
+                    <Grid container component='form' 
+                        onSubmit={(e)=>{ e.preventDefault(); signUp(e);}} 
+                        spacing={16} 
+                    >
                         <Grid item xs={3}> </Grid>
                         <Grid item component='div' className='avatarContainer' xs={6} >
                             <Typography 
@@ -114,11 +67,11 @@ const LoginForm = (props)=>{
                                 align="center" 
                                 color="primary"
                                 gutterBottom
-                                >Login Here</Typography>
-                            <img
+                                >SignUp Here</Typography>
+                            <div
                                 className="avatar"  
-                                gutterBottom
-                            />
+                            ></div>
+
 
                         </Grid>
                         <Grid item xs={3}> </Grid>
@@ -129,6 +82,17 @@ const LoginForm = (props)=>{
                                 placeholder="User name.."
                                 label="Name"
                                 id="name"
+                                name="name"
+                            /> 
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField 
+                                fullWidth
+                                required
+                                placeholder="What Should We Call You..."
+                                label="Nick Name"
+                                id="nick name"
+                                name="nickName"
                             /> 
                         </Grid>
                         <Grid xs={12} item>
@@ -137,11 +101,81 @@ const LoginForm = (props)=>{
                                 required
                                 placeholder="Password.."
                                 label="Password"
+                                id="password"
+                                type="password"
+                                name="password"
+                            /> 
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button  
+                                className="btn"
+                                type="submit" 
+                                variant="contained" 
+                                color="primary"
+                                fullWidth
+                                >
+                                Submit 
+                            </Button> 
+                        </Grid>
+                        
+                    </Grid>                    
+                
+                </div>
+
+        </Fragment>
+    );
+
+}
+
+
+const LoginForm = ()=>{
+    return (
+        <Fragment> 
+                <div className="loginForm">
+                    <Grid container component='form' onSubmit={(e)=>{ e.preventDefault(); signIn(e);}} justify="center" spacing={16} >
+                        <Grid item xs={3}> </Grid>
+                        <Grid item component='div' className='avatarContainer' xs={6} >
+                            <Typography 
+                                variant="display2"
+                                align="center" 
+                                color="primary"
+                                gutterBottom
+                                >Login Here</Typography>
+                            <div
+                                className="avatar"  
+                            ></div>
+
+
+                        </Grid>
+                        <Grid item xs={3}> </Grid>
+                        <Grid item xs={12}>
+                            <TextField 
+                                fullWidth
+                                required
+                                placeholder="User name.."
+                                label="Name"
                                 id="name"
+                                name="name"
+                            /> 
+                        </Grid>
+                        <Grid xs={12} item>
+                            <TextField 
+                                fullWidth
+                                required
+                                placeholder="Password.."
+                                label="Password"
+                                id="password"
+                                type="password"
+                                name="password"
                             /> 
                         </Grid>
                         <Grid item xs={12} >
-                            <Button  className="btn" type="submit" variant="contained" color="primary">
+                            <Button 
+                                className="btn" 
+                                type="submit" 
+                                fullWidth 
+                                variant="contained" 
+                                color="primary">
                                 Submit 
                             </Button> 
                         </Grid>
