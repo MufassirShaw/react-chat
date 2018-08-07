@@ -11,11 +11,12 @@ const Styles = {
         overflowY:"hidden"
     },
     ht1:{
-        height:"10%",
+        height:"8%",
+        marginBottom: "2%"
     },
     ht9:{
         maxHeight:"90%",
-
+        
     }
 }
 
