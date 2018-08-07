@@ -8,14 +8,13 @@ const Styles = {
     container:{
         height:"100vh",
         alignContent:"flex-start",
-        overflowY:"hidden"
     },
     ht1:{
-        height:"8%",
-        marginBottom: "2%"
+        height:"10%",
+        marginBottom: "1.5%"
     },
     ht9:{
-        maxHeight:"90%",
+        maxHeight:"88%",
         
     }
 }

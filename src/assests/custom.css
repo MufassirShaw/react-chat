@@ -18,6 +18,15 @@
     justify-content: center;
     
 }
+.currentChat{
+    margin: 0 auto;
+    width: 90%;
+    height: 90%;
+    background-image: url("./imgs/4665.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 .avatar{
     background-image: url("./imgs/login.png");
     background-position: center center;
