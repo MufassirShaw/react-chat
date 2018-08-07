@@ -8,15 +8,61 @@ import Grid from '@material-ui/core/Grid';
 import Paper from "@material-ui/core/Paper";
 import Avatar from '@material-ui/core/Avatar';
 import {signIn, signUp} from "../../Actions";
-//the only component exported from this module
-export class Form extends Component{
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { withStyles } from '@material-ui/core/styles';
+import Store from "../../store/Store";
+
+const styles = {
+   form:{
+     margin: "50px auto",
+     width: "50%",
+     padding: "20px",
+     paddingTop: "0",
+     
+   },
+    progress:{
+       width: "100%",
+       marginBottom: "20px",
+       padding: "0 20px",
+       borderRadius: "5px"
+   },
+   loginError:{
+        display: "block",
+        padding:"10px",
+        color: "#b71c1c"
+   },
+};
+
+class Form extends Component{
     constructor(){
         super();
         this.state = {
-            isReg: false
+            isReg: false,
+            loaderState : false,
+            loginError: false
         }
+
+        Store.on("userNotFound",this.loginError)
+
     }
+    loginError=()=>{
+        this.setState({
+            loaderState: !this.state.loaderState,
+            loginError: true
+        })
+
+    }
+    showLoader = () =>{
+        this.setState({
+            loaderState: true
+        })
+    }
+
+
+
+    
     render(){
+        const {classes} = this.props;
         return(
             <Fragment>
                 <Modal 
@@ -26,23 +72,32 @@ export class Form extends Component{
                 >                     
                     <Slide in direction="down" mountOnEnter unmountOnExit>
                         
-                        <Paper className="form" elevation={10}>
+                        <Paper className={classes.form} elevation={10}>
+                        <LinearProgress variant="query" hidden={!this.state.loaderState} className={classes.progress}/>       
                         {   
                             this.state.isReg 
                             ? 
-                            <LoginForm  />
+                            <LoginForm showLoader={this.showLoader} />
                             :
-                            <SignUpForm />
+                            <SignUpForm showLoader={this.showLoader}  />
                         }    
+                        {
+                            this.state.loginError
+                            ?
+                            <Typography className={classes.loginError} variant="title">
+                                <strong> Oops! </strong> You aren't Registered with us :( 
+                            </Typography> 
+                            :""
+                        }
+
                             <Typography 
                                 variant="subheading"
-                                className="link" 
                                 color="primary" 
-                                onClick= {()=>{this.setState({isReg: !this.state.isReg})}}
+                                onClick= {()=>{this.setState({isReg: !this.state.isReg, loginError: false})}}
                                 href="#" 
                                 component="a" 
                                 gutterBottom>
-                                Or {this.state.isReg?" Signup" : " Sign In"} 
+                                {this.state.isReg?" Signup" : " Sign In"} 
                             </Typography>           
                         </Paper>
                     </Slide>
@@ -50,31 +105,33 @@ export class Form extends Component{
             </Fragment>
         );
     }
-}
- 
+};
+
+
+export default withStyles(styles)(Form);
+
+
  const SignUpForm = (props)=>{
-    return (
+   return (
         <Fragment> 
                 <div>
-                    <Grid container component='form' 
-                        onSubmit={(e)=>{ e.preventDefault(); signUp(e);}} 
+                    <Grid container component='form'  style={{paddingTop:"20px",}}
+                        onSubmit={(e)=>{ e.preventDefault();  signUp(e); props.showLoader();}} 
                         spacing={16} 
                     >
-                        <Grid item xs={3}> </Grid>
-                        <Grid item component='div' className='avatarContainer' xs={6} >
+                    <Grid item md={3} sm={1}> </Grid>
+                        <Grid item component='div' className='avatarContainer' md={6} xs={10} >
                             <Typography 
-                                variant="display2"
+                                variant="display1"
                                 align="center" 
                                 color="primary"
                                 gutterBottom
-                                >SignUp Here</Typography>
-                            <div
-                                className="avatar"  
-                            ></div>
-
-
+                                >SignUp Here
+                            </Typography>
+                            <div className="avatar"></div>
                         </Grid>
-                        <Grid item xs={3}> </Grid>
+
+                        <Grid item md={3} sm={1}> </Grid>
                         <Grid item xs={12}>
                             <TextField 
                                 fullWidth
@@ -108,11 +165,12 @@ export class Form extends Component{
                         </Grid>
                         <Grid item xs={12}>
                             <Button  
-                                className="btn"
+                                name="btn"
                                 type="submit" 
                                 variant="contained" 
                                 color="primary"
                                 fullWidth
+                                style = {{marginBottom:"10px"}}
                                 >
                                 Submit 
                             </Button> 
@@ -128,15 +186,22 @@ export class Form extends Component{
 }
 
 
-const LoginForm = ()=>{
+const LoginForm = (props)=>{
     return (
         <Fragment> 
                 <div className="loginForm">
-                    <Grid container component='form' onSubmit={(e)=>{ e.preventDefault(); signIn(e);}} justify="center" spacing={16} >
-                        <Grid item xs={3}> </Grid>
-                        <Grid item component='div' className='avatarContainer' xs={6} >
+                    <Grid 
+                        container 
+                        component='form'  
+                        style={{paddingTop:"20px",}}
+                        onSubmit={(e)=>{ e.preventDefault(); signIn(e); props.showLoader();}} 
+                        justify="center" 
+                        spacing={16} 
+                    >
+                        <Grid item md={3} sm={1}> </Grid>
+                        <Grid item component='div' className='avatarContainer' md={6} xs={10} >
                             <Typography 
-                                variant="display2"
+                                variant="display1"
                                 align="center" 
                                 color="primary"
                                 gutterBottom
@@ -147,7 +212,7 @@ const LoginForm = ()=>{
 
 
                         </Grid>
-                        <Grid item xs={3}> </Grid>
+                        <Grid item md={3} sm={1}> </Grid>
                         <Grid item xs={12}>
                             <TextField 
                                 fullWidth
@@ -171,16 +236,17 @@ const LoginForm = ()=>{
                         </Grid>
                         <Grid item xs={12} >
                             <Button 
-                                className="btn" 
+                                name="btn"
                                 type="submit" 
                                 fullWidth 
                                 variant="contained" 
-                                color="primary">
+                                color="primary"
+                                style = {{marginBottom:"10px"}}
+                                >
                                 Submit 
                             </Button> 
                         </Grid>
-                        
-                    </Grid>                    
+                    </Grid>                   
                 
                 </div>
 
