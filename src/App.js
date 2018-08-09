@@ -1,7 +1,7 @@
 import React,{Fragment} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import io from "socket.io-client";
-import Header from "./Components/Layout/Header";
+import Main from "./Components/Layout/Main";
 import Form from "./Components/Layout/Form";
 import "./assests/custom.css";
 import "typeface-roboto";
@@ -73,7 +73,7 @@ class App extends React.Component {
         <div className="App">
         {  !this.state.nickName?
           <Form/>
-          :<Header userName={this.state.nickName}/>
+          : <Main nickName={this.state.nickName}/>
         }
         
         </div>

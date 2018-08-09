@@ -1,5 +1,4 @@
 import {EventEmitter} from "events";
-import * as Action from "../Actions";
 import Dispatcher from "../dispatcher/Dispatcher";
 import firebase from "firebase/app";
 import "firebase/database";
@@ -71,6 +70,8 @@ class Store extends EventEmitter{
             case "LOGOUT":
             this.logout()
             break;
+            default:
+            console.log("defualt action");
         }
     }
 

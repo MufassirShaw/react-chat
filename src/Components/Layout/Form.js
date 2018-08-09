@@ -6,7 +6,6 @@ import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Paper from "@material-ui/core/Paper";
-import Avatar from '@material-ui/core/Avatar';
 import {signIn, signUp} from "../../Actions";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
