@@ -18,15 +18,25 @@
     justify-content: center;
     
 }
-.currentChat{
-    margin: 0 auto;
-    width: 90%;
-    height: 90%;
-    background-image: url("./imgs/4665.jpg");
+.sendIcon{
+    background-image: url("./imgs/btn.png");
     background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; 
+    /* background-size: auto 100%; */
+
+
 }
+.currentThread{
+    width: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    border: solid;
+    height: 480px;
+}
+.currentChat p{
+    border:solid cyan;
+}
+
 .avatar{
     background-image: url("./imgs/login.png");
     background-position: center center;
@@ -50,5 +60,12 @@
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    
 }
+
+
+/* .user:active{
+    background: rgb(235, 235, 235);
+}
+.user:active .user:hover{
+    background: #fff;
+} */

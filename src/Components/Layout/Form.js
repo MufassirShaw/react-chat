@@ -6,7 +6,7 @@ import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Paper from "@material-ui/core/Paper";
-import {signIn, signUp} from "../../Actions";
+import {signIn, signUp} from "./../../Actions/Actions";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import Store from "../../store/Store";
@@ -41,12 +41,15 @@ class Form extends Component{
             loginError: false
         }
 
-        Store.on("userNotFound",this.loginError)
 
     }
+    componentDidMount() {
+        Store.on("userNotFound",this.loginError);        
+    }
+    
     loginError=()=>{
         this.setState({
-            loaderState: !this.state.loaderState,
+            loaderState: false,
             loginError: true
         })
 
@@ -57,6 +60,9 @@ class Form extends Component{
         })
     }
 
+    signUp = (e)=>{
+        
+    }
 
 
     
@@ -74,7 +80,7 @@ class Form extends Component{
                         <Paper className={classes.form} elevation={10}>
                         <LinearProgress variant="query" hidden={!this.state.loaderState} className={classes.progress}/>       
                         {   
-                            this.state.isReg 
+                            this.state.isReg  
                             ? 
                             <LoginForm showLoader={this.showLoader} />
                             :
@@ -115,7 +121,19 @@ export default withStyles(styles)(Form);
         <Fragment> 
                 <div>
                     <Grid container component='form'  style={{paddingTop:"20px",}}
-                        onSubmit={(e)=>{ e.preventDefault();  signUp(e); props.showLoader();}} 
+                        onSubmit={(e)=>{ 
+                            e.preventDefault();
+                            let name = e.target.name.value.toUpperCase(),
+                                nickName = e.target.nickName.value,
+                                password = e.target.password.value;
+                            signUp({name,nickName,password});  //passing the user 
+                            props.showLoader();
+                            //could have been alot better then this
+                            e.target.name.value = "";
+                            e.target.nickName.value="";
+                            e.target.password.value = "";
+
+                        }} 
                         spacing={16} 
                     >
                     <Grid item md={3} sm={1}> </Grid>
@@ -149,6 +167,7 @@ export default withStyles(styles)(Form);
                                 label="Nick Name"
                                 id="nick name"
                                 name="nickName"
+                                /*should add onchange event to check for nickName uniqueness*/
                             /> 
                         </Grid>
                         <Grid xs={12} item>
@@ -193,7 +212,15 @@ const LoginForm = (props)=>{
                         container 
                         component='form'  
                         style={{paddingTop:"20px",}}
-                        onSubmit={(e)=>{ e.preventDefault(); signIn(e); props.showLoader();}} 
+                        onSubmit={(e)=>{ 
+                            e.preventDefault(); 
+                            let name = e.target.name.value.toUpperCase(),
+                                password = e.target.password.value;
+                            signIn({name,password}); 
+                            props.showLoader();
+                            e.target.name.value="";
+                            e.target.password.value=""
+                        }} 
                         justify="center" 
                         spacing={16} 
                     >

@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import {withStyles} from "@material-ui/core/styles";
 import { Icon } from "@material-ui/core";
-import {logout} from "./../../Actions";
+import {logout} from "./../../Actions/Actions";
 const Styles = {
   toolBar: {
     display: "flex",
@@ -20,20 +20,20 @@ const Styles = {
   }
 };
 const Header = (props)=>{
-   const {classes,userName} = props;
+   const {classes,userName, socket} = props;
     return (
       <React.Fragment>
-        <AppBar position="static" >
+        <AppBar position="static">
           <Toolbar className={classes.toolBar}>
             <Typography variant="title" color="inherit">
-              {userName?userName:"defualt"}'s Chats
+              {userName?userName:"Defualt"}'s Chats
             </Typography>
             <Typography 
                 className={classes.link} 
                 variant="headline" 
                 component="a" 
                 href="#"
-                onClick={logout}
+                onClick={logout} 
                 > 
                 Logout 
              

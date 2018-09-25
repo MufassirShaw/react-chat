@@ -8,14 +8,36 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from "@material-ui/core/Avatar";
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import {selectChat} from "./../../Actions/Actions";
 const Styles = {
     userContainer:{
         height:"100%",
         overflow:"hidden"
     },
     usersList:{
-        overflowY:"scroll",
-        maxHeight:"80%"
+        overflowY:"auto",
+        maxHeight:"80%",
+        '&::-webkit-scrollbar-track':{
+            boxShadow: "inset 0 0 6px  rgba(0,0,0,0.3)",
+            borderRadius: "20px",
+            backgroundColor: "#ccc",
+        },
+        '&::-webkit-scrollbar':{
+            width: "12px",
+            backgroundColor: "#ccc",
+        },
+        '&::-webkit-scrollbar-thumb':{
+            borderRaduis: "20px",
+            backgroundColor: "#f5f5f5",
+            backgroundImage: `-webkit-gradient(linear,
+                left bottom,
+                left top,
+                color-stop(0.44, rgb(122,153,217)),
+                color-stop(0.72, rgb(73,125,189)),
+                color-stop(0.86, rgb(28,58,148)));
+            `,
+            borderRadius:"20px"
+        }
     }
 }
 
@@ -27,7 +49,7 @@ export default withStyles(Styles)(
                 users:[
                     {
                         "id": "5b6a94a8a287cc9840991bb1",
-                        "name": "Reeves"
+                        "name": "Community"
                       },
                       {
                         "id": "5b6a94a873a7afa9c417dc04",
@@ -91,9 +113,10 @@ export default withStyles(Styles)(
                       },                
                     
                     ]
+            
             }
         }
-
+        
 
     render(){
         const {classes} = this.props;
@@ -107,13 +130,13 @@ export default withStyles(Styles)(
                     }
                 >
                     <Typography variant="display1" align="center" style={{paddingTop:"10px"}} gutterBottom > Users </Typography>
-                    <List component="nav" className={classes.usersList} >
+                    <List  component="nav" className={classes.usersList} >
                         {
                             this.state.users.map((user)=>{
-                                return <User user={user} key={user.id}/>;
+                                return <User user={user} selectChat={selectChat} key={user.id}/>;
                             })
                         }
-                    </List> {/* This component is overflowing and cannot fix it at the moment*/}
+                    </List>
                 </Paper>
             </React.Fragment>
         );
@@ -123,16 +146,26 @@ export default withStyles(Styles)(
 
 
 
-const User =({user})=>{
-
+const User =(props)=>{
+    const {user,selectChat} = props;
     return(
 
         <React.Fragment>
-            <ListItem button >
-                <ListItemAvatar>
+            <ListItem 
+                button 
+                onClick={
+                    (e)=>{
+                        selectChat({
+                                chatId:`${user.id}+ ${localStorage.getItem("id")}`,
+                                chatName:user.name // the name of the reciver n btw this should be nickName not name
+                        });
+                    }
+                }     
+            >
+                <ListItemAvatar >
                     <Avatar  src={`https://api.adorable.io/avatars/89/${user.id}@adorable.io.png`}/>
                 </ListItemAvatar>
-                <ListItemText 
+                <ListItemText
                     primary={user.name}
                 />
             </ListItem>

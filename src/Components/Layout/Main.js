@@ -11,7 +11,7 @@ const Styles = {
     },
     ht1:{
         height:"10%",
-        marginBottom: "1.5%"
+        marginBottom: "1%"
     },
     ht9:{
         maxHeight:"88%",
@@ -23,24 +23,28 @@ export default withStyles(Styles)(
     class Main extends React.Component{
 
         render(){
-            const {nickName,classes} = this.props;
+            const {nickName,classes,socket} = this.props;
             return (
                 <React.Fragment>
                     <Grid container className={classes.container}>
                         <Grid item className={classes.ht1} xs={12}>
-                            <Header userName={nickName}/> 
+                            <Header socket={socket} userName={nickName}/> 
                         </Grid>
         
-                        <Grid item
-                             xs={8} md={9}
+                        <Grid 
+                            item
+                            xs={8} 
+                            md={9}
                             className={classes.ht9}
                         >
-                            <MainChat/>
+                            <MainChat socket={socket}/>
                         </Grid>
-                        <Grid item 
-                             xs={4} md={3} 
+                        <Grid 
+                            item 
+                            xs={4} 
+                            md={3} 
                             className={classes.ht9}>
-                            <Users/>
+                            <Users socket={socket}/>
                         </Grid>
                     </Grid>  
                 </React.Fragment>
