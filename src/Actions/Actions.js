@@ -1,5 +1,5 @@
 import Dispatcher from "./../dispatcher/Dispatcher";
-import {SIGN_UP,SIGN_IN,LOGOUT} from "./Types"
+import {SIGN_UP,SIGN_IN,LOGOUT,VERIFY_USER} from "./Types"
 export const signUp = ({name,nickName,password})=>{
     Dispatcher.dispatch({
         "type" : SIGN_UP,
@@ -19,8 +19,18 @@ export const signIn = ({name,password})=>{
         }
     })
 
+}
+export const verifyUser = ({name,nickName,password},callback) =>{ //this callback decides wether to signup or not
+ Dispatcher.dispatch({
+     "type": VERIFY_USER,
+     user:{
+         name,
+         nickName,
+         password
+     },
+     callback,
 
-
+ })
 }
 
 export const logout = ()=>{

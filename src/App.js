@@ -5,15 +5,19 @@ import Main from "./Components/Layout/Main";
 import Form from "./Components/Layout/Form";
 import "./assests/custom.css";
 import "typeface-roboto";
-import Store from "./store/Store";
-import {USER_CONNECTED} from "./Actions/Types";
+import AuthStore from "./store/AuthStore";
+// import Users from './Components/Layout/Users';
+// import {USER_CONNECTED} from "./Actions/Types";
 const url = "http://localhost:8000/"; // This is the url where our server is setup
 class App extends React.Component {
   constructor(){
     super();
+
+
+
     this.state = !(localStorage.getItem("id") 
                       && 
-                  localStorage.getItem("nickName")) //if there is no user stored in local storeage
+                  localStorage.getItem("nickName")) //if there is no user stored in local storage
       ?
     {
       nickName: null,
@@ -27,80 +31,65 @@ class App extends React.Component {
       socket: null,
     }; //maintaing user state
 
-  }
-
-//DANGEROUS use this life cycle hook should be AVOIDED
-  // componentWillMount() {
-  //   this.initSocket();
-
-  // }
-  componentDidMount() {
-      
-    // NOTE THIS SHOULD BE REMOVED
-    // this.initSocket();
-
-    Store.on("registered",({nickName,id})=>{
-      this.setState({nickName: nickName, id:id});
-      this.initSocket();
-      this.StoreUserLocally(this.state);
-    }); //signed Up Successfully 
-    
-    
-    Store.on("userFound",({nickName, id})=>{
-      this.setState({
-          nickName: nickName,
-          id:id
-        });  
-        this.initSocket();
-        this.StoreUserLocally(this.state);
-    }); //Logged In Successfully
-
-    Store.on("logout",this.logout);
-
-  }
+      let socket = io.connect(url);
+      this.state.socket=socket; 
+      /* if user refreshes or if user is already in local db and need no auth*/
+      if(this.isUserStoredLocally()){
+        let {nickName,socket} = this.state;
+        // console.log(socket.id);
+        socket.emit("USER_CONNECTED",{nickName:nickName, id:socket.id});
+      }
+  }  
 
   StoreUserLocally = (user)=>{
     localStorage.setItem("id" ,user.id);
-    localStorage.setItem("nickName", user.nickName);
+    localStorage.setItem("nickName", user.nickName); 
   }
 
+  isUserStoredLocally=()=>{
+    return !(localStorage.getItem("id") && localStorage.getItem("nickName")) //if there is no user stored in local storag
+            ?
+          false 
+            : 
+          true;
+  }
 
+  
   logout = () =>{
+    let {socket} = this.state;
+    socket.emit("logout", {nickName:this.state.nickName, id:this.state.socket.id})
     localStorage.removeItem("id");
     localStorage.removeItem("nickName");
     this.setState({
       nickName: null,
       id:null,
-      socket: null
     });
  }
 
     //socket io stuff
   initSocket=()=>{
-    let socket = io.connect(url),
-        {nickName,id}=this.state;
-    this.setState({socket});
-    socket.on("connect",()=>{
-      socket.emit(USER_CONNECTED,{nickName,id});
-      console.log(socket.id);
-  
-    })
   }
 
+
+  componentDidMount() {
+    AuthStore.on("logout",this.logout);
+
+    AuthStore.on("VERIFIED",({nickName,id})=>{
+      this.setState({nickName: nickName, id:id});
+      // this.StoreUserLocally(this.state);
+      let {socket} = this.state;
+      socket.emit("USER_CONNECTED",{nickName:nickName});
+    }); // User is Autherized Successfully e.g signIn loggedin signedUp
+    
+  }
 
 
   componentWillUnmount(){
-    Store.removeAllListeners();
+    AuthStore.removeAllListeners("logout");
+    AuthStore.removeAllListeners("VERIFIED");
   }
 
-
-
-
-
-  
-
   render() {
-
     return (
       <Fragment>
         <CssBaseline/>
@@ -108,7 +97,7 @@ class App extends React.Component {
           {
             !this.state.nickName
               ?
-            <Form/>
+            <Form socket={this.state.socket}/>
               :
             <Main 
               nickName={this.state.nickName}

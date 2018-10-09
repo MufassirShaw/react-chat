@@ -6,7 +6,7 @@ let root = document.getElementById("root");
 
 ReactDOM.render(<App />, root);
 
-if(module.hot){
-    module.hot.accept();
+// if(module.hot){
+//     module.hot.accept();
 
-}
+// }

@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import {withStyles} from "@material-ui/core/styles";
-import { Icon } from "@material-ui/core";
+// import { Icon } from "@material-ui/core";
 import {logout} from "./../../Actions/Actions";
 const Styles = {
   toolBar: {
@@ -20,7 +20,7 @@ const Styles = {
   }
 };
 const Header = (props)=>{
-   const {classes,userName, socket} = props;
+   const {classes,userName} = props;
     return (
       <React.Fragment>
         <AppBar position="static">

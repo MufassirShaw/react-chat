@@ -14,7 +14,7 @@ const Styles = {
         marginBottom: "1%"
     },
     ht9:{
-        maxHeight:"88%",
+        minHeight:"88%",
         
     }
 }
@@ -24,7 +24,9 @@ export default withStyles(Styles)(
 
         render(){
             const {nickName,classes,socket} = this.props;
+            // console.log(socket)
             return (
+
                 <React.Fragment>
                     <Grid container className={classes.container}>
                         <Grid item className={classes.ht1} xs={12}>
@@ -44,7 +46,7 @@ export default withStyles(Styles)(
                             xs={4} 
                             md={3} 
                             className={classes.ht9}>
-                            <Users socket={socket}/>
+                            <Users nickName={nickName} socket={socket}/>
                         </Grid>
                     </Grid>  
                 </React.Fragment>

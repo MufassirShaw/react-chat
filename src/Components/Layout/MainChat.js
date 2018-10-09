@@ -1,10 +1,9 @@
 import React from 'react';
 import {withStyles} from "@material-ui/core/styles";
 import Input from '@material-ui/core/Input';
-import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Store from "./../../store/Store";
+// import Store from "./../../store/Store";
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 const Styles = {
@@ -27,10 +26,6 @@ const Styles = {
             boxShadow:" inset 0 0 6px rgba(0,0,0,0.3)",
             backgroundColor: "#ccc",
             borderRadius:" 10px"
-        },
-        '&::-webkit-scrollbar':{
-	        width: "10px",
-    	    backgroundColor:"#ccc",
         },
         '&::-webkit-scrollbar-thumb':{
             borderRadius:" 10px",
@@ -96,15 +91,7 @@ export default withStyles(Styles)(
                 }
             }
         }
-          
-        sendMessage=(msg)=>{
-            const {socket} =this.props;
-            //this method should this msg to the current chat/room
-            
-        }
-        
-       
-
+                 
         render(){
             const {classes}= this.props;
             return (

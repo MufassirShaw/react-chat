@@ -9,6 +9,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import {selectChat} from "./../../Actions/Actions";
+import {push} from "@immutable-array/push";
 const Styles = {
     userContainer:{
         height:"100%",
@@ -16,7 +17,7 @@ const Styles = {
     },
     usersList:{
         overflowY:"auto",
-        maxHeight:"80%",
+        minHeight:"80%",
         '&::-webkit-scrollbar-track':{
             boxShadow: "inset 0 0 6px  rgba(0,0,0,0.3)",
             borderRadius: "20px",
@@ -38,6 +39,7 @@ const Styles = {
             `,
             borderRadius:"20px"
         }
+
     }
 }
 
@@ -47,77 +49,21 @@ export default withStyles(Styles)(
             super();
             this.state = {
                 users:[
-                    {
-                        "id": "5b6a94a8a287cc9840991bb1",
-                        "name": "Community"
-                      },
-                      {
-                        "id": "5b6a94a873a7afa9c417dc04",
-                        "name": "Margery"
-                      },
-                      {
-                        "id": "5b6a94a8751d2217ca293413",
-                        "name": "Hodges"
-                      },
-                      {
-                        "id": "5b6a94a85648257cf587a7ca",
-                        "name": "Vincent"
-                      },
-                      {
-                        "id": "5b6a94a8921b055d9632c266",
-                        "name": "Maritza"
-                      },
-                      {
-                        "id": "5b6a94a899ac5436011dddda",
-                        "name": "Theresa"
-                      },
-                      {
-                        "id": "5b6a94a8f291eae6278f978f",
-                        "name": "Cathleen"
-                      },
-                      {
-                        "id": "5b6a94a8c2b7bb535181206b",
-                        "name": "Aguirre"
-                      },
-                      {
-                        "id": "5b6a94a891b3342295533198",
-                        "name": "Adkins"
-                      },
-                      {
-                        "id": "5b6a94a884823a08ca764873",
-                        "name": "Guzman"
-                      },
-                      {
-                        "id": "5b6a94a8c797ee57d2c12913",
-                        "name": "Beatrice"
-                      },
-                      {
-                        "id": "5b6a94a88084c0204a1825c9",
-                        "name": "Key"
-                      },
-                      {
-                        "id": "5b6a94a88024d33c35691282",
-                        "name": "Laurel"
-                      },
-                      {
-                        "id": "5b6a94a816f69ed40c009bcd",
-                        "name": "Walton"
-                      },
-                      {
-                        "id": "5b6a94a8449aac3feb6f7b84",
-                        "name": "Polly"
-                      },
-                      {
-                        "id": "5b6a94a83bb07c9eb9d46900",
-                        "name": "Muf"
-                      },                
-                    
                     ]
             
             }
         }
         
-
+    componentDidMount() {
+        const {socket,nickName} = this.props;
+        socket.on("NEW_USER_ADDED",(listOfUsers)=>{
+            listOfUsers = listOfUsers.filter(user=>(user.nickName!==nickName));
+            this.setState({
+                users: listOfUsers
+            })
+        });
+                
+    }
     render(){
         const {classes} = this.props;
         return (
@@ -131,10 +77,15 @@ export default withStyles(Styles)(
                 >
                     <Typography variant="display1" align="center" style={{paddingTop:"10px"}} gutterBottom > Users </Typography>
                     <List  component="nav" className={classes.usersList} >
-                        {
+                        {   this.state.users.length>0
+                            ?
                             this.state.users.map((user)=>{
                                 return <User user={user} selectChat={selectChat} key={user.id}/>;
-                            })
+                            }) 
+                            :
+                            <Typography variant="subheading" color="textSecondary" gutterBottom align="center">
+                                <strong>  No One Connected yet</strong>
+                             </Typography>
                         }
                     </List>
                 </Paper>
@@ -157,16 +108,16 @@ const User =(props)=>{
                     (e)=>{
                         selectChat({
                                 chatId:`${user.id}+ ${localStorage.getItem("id")}`,
-                                chatName:user.name // the name of the reciver n btw this should be nickName not name
+                                chatName:user.nickName // the name of the reciver n btw this should be nickName not name
                         });
                     }
                 }     
             >
                 <ListItemAvatar >
-                    <Avatar  src={`https://api.adorable.io/avatars/89/${user.id}@adorable.io.png`}/>
+                    <Avatar  src={`https://api.adorable.io/avatars/89/${user.nickName}@adorable.io.png`}/>
                 </ListItemAvatar>
                 <ListItemText
-                    primary={user.name}
+                    primary={user.nickName}
                 />
             </ListItem>
             <Divider inset/>

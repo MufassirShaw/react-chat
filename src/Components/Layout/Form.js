@@ -6,11 +6,10 @@ import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Paper from "@material-ui/core/Paper";
-import {signIn, signUp} from "./../../Actions/Actions";
+import {signIn, signUp, verifyUser} from "./../../Actions/Actions";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
-import Store from "../../store/Store";
-
+import AuthStore from "../../store/AuthStore";
 const styles = {
    form:{
      margin: "50px auto",
@@ -25,10 +24,11 @@ const styles = {
        padding: "0 20px",
        borderRadius: "5px"
    },
-   loginError:{
+   err:{
         display: "block",
         padding:"10px",
-        color: "#b71c1c"
+        color: "#b71c1c",
+        fontSize:"14px",
    },
 };
 
@@ -38,13 +38,14 @@ class Form extends Component{
         this.state = {
             isReg: false,
             loaderState : false,
-            loginError: false
+            loginError: false,
+            userError: ""
         }
 
 
     }
     componentDidMount() {
-        Store.on("userNotFound",this.loginError);        
+        AuthStore.on("userNotFound",this.loginError);        
     }
     
     loginError=()=>{
@@ -59,13 +60,36 @@ class Form extends Component{
             loaderState: true
         })
     }
-
-    signUp = (e)=>{
-        
+    verify = (e)=>{
+        let name = e.target.name.value.toUpperCase(),
+        nickName = e.target.nickName.value,
+        password = e.target.password.value;
+        verifyUser({name,nickName,password}, this._signUp);          
+        /*
+            @para user
+            @para callBack **Decides whether or not the user should signup
+        */
+        this.showLoader();
     }
 
+    _signUp=(userExist,user)=>{  //if user nickname is unique user has an object to be set
+        if(!userExist){
+            signUp(user); //give this user to the rest of the app
+        }else{
+            this.setState({loaderState:false});
+            this.setUserNameErr("Nick name already exists");
+        }
 
-    
+    }
+    setUserNameErr=(err)=>{
+        this.setState({
+            userError:err
+        })
+    }
+    componentWillUnmount(){
+        AuthStore.removeListener("userNotFound", this.loginError);
+    }
+        
     render(){
         const {classes} = this.props;
         return(
@@ -84,13 +108,21 @@ class Form extends Component{
                             ? 
                             <LoginForm showLoader={this.showLoader} />
                             :
-                            <SignUpForm showLoader={this.showLoader}  />
+                            <SignUpForm handleSubmit={this.verify} />
                         }    
                         {
                             this.state.loginError
                             ?
-                            <Typography className={classes.loginError} variant="title">
+                            <Typography className={classes.err} variant="title">
                                 <strong> Oops! </strong> You aren't Registered with us :( 
+                            </Typography> 
+                            :""
+                        }
+                        {
+                            this.state.userError !==""
+                            ?
+                            <Typography className={classes.err} variant="title">
+                                <p>{ this.state.userError} </p>  
                             </Typography> 
                             :""
                         }
@@ -114,7 +146,7 @@ class Form extends Component{
 
 
 export default withStyles(styles)(Form);
-
+ 
 
  const SignUpForm = (props)=>{
    return (
@@ -123,16 +155,7 @@ export default withStyles(styles)(Form);
                     <Grid container component='form'  style={{paddingTop:"20px",}}
                         onSubmit={(e)=>{ 
                             e.preventDefault();
-                            let name = e.target.name.value.toUpperCase(),
-                                nickName = e.target.nickName.value,
-                                password = e.target.password.value;
-                            signUp({name,nickName,password});  //passing the user 
-                            props.showLoader();
-                            //could have been alot better then this
-                            e.target.name.value = "";
-                            e.target.nickName.value="";
-                            e.target.password.value = "";
-
+                            props.handleSubmit(e);
                         }} 
                         spacing={16} 
                     >
@@ -167,7 +190,6 @@ export default withStyles(styles)(Form);
                                 label="Nick Name"
                                 id="nick name"
                                 name="nickName"
-                                /*should add onchange event to check for nickName uniqueness*/
                             /> 
                         </Grid>
                         <Grid xs={12} item>
@@ -218,8 +240,8 @@ const LoginForm = (props)=>{
                                 password = e.target.password.value;
                             signIn({name,password}); 
                             props.showLoader();
-                            e.target.name.value="";
-                            e.target.password.value=""
+                            // e.target.name.value="";
+                            // e.target.password.value=""
                         }} 
                         justify="center" 
                         spacing={16} 
